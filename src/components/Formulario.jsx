@@ -1,13 +1,23 @@
 import { useState, useEffect } from "react";
 import Error from "./Error";
 
-const Formulario = ({ pacientes, setPacientes }) => {
+const Formulario = ({ pacientes, setPacientes, paciente, setPaciente }) => {
   const [nombre, setNombre] = useState(""); //nombre del usuario
   const [propietario, setPropietario] = useState("");   //nombre del propietario
   const [email, setEmail] = useState(""); //email del usuario
   const [fecha, setFecha] = useState(""); //fecha de alta del usuario
   const [sintomas, setSintomas] = useState("");  //sintomas del usuario
   const [error, setError] = useState(false); // para mostrar el error en caso de que no se haya llenado el campo
+
+  useEffect(() => { //para que se ejecute una sola vez
+    if (Object.keys(paciente).length > 0) { //si el objeto paciente tiene alguna propiedad
+    setNombre(paciente.nombre);
+    setPropietario(paciente.propietario);
+    setEmail(paciente.email);
+    setFecha(paciente.fecha);
+    setSintomas(paciente.sintomas);
+  }
+}, [paciente]);
 
   const generarId = () => { //genera un id unico para cada paciente
     const random = Math.random().toString(36).substr(2); //genera un numero aleatorio
@@ -34,8 +44,22 @@ const Formulario = ({ pacientes, setPacientes }) => {
       email,
       fecha,
       sintomas,
-      id: generarId()
     }
+
+    if (paciente.id) { // si el paciente tiene un id, se actualiza
+      objetoPaciente.id = paciente.id; // se agrega el id al objeto
+      setPacientes( // se actualiza el array de pacientes
+        pacientes.map(paciente => paciente.id === objetoPaciente.id ? objetoPaciente : paciente) // se busca el paciente con el id y se reemplaza por el nuevo objeto
+      
+      );
+      setPacientes(pacientesActualizados); // se actualiza el array de pacientes
+      setPaciente({}); // se limpia el objeto paciente
+
+    } else { // si no, se agrega
+      objetoPaciente.id = generarId(); // se agrega el id al objeto
+      setPacientes([...pacientes, objetoPaciente]); // se agrega el objeto al array de pacientes
+    }
+
     setPacientes([...pacientes, objetoPaciente]); // se agrega el paciente al array de pacientes
 
     // se limpian los campos
@@ -81,7 +105,7 @@ const Formulario = ({ pacientes, setPacientes }) => {
             <label className="block text-gray-700 uppercase font-bold" htmlFor="sintomas">Síntomas</label>
             <textarea className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md" name="sintomas" id="sintomas" placeholder="Describe los síntomas" value={sintomas} onChange={ (e) => setSintomas(e.target.value) }></textarea>
           </div>
-          <input className="bg-indigo-600 w-full p-3 uppercase font-bold hover:bg-indigo-700 mt-5 text-white cursor-pointer transition-all" type="submit" value="Agregar Paciente" />
+          <input className="bg-indigo-600 w-full p-3 uppercase font-bold hover:bg-indigo-700 mt-5 text-white cursor-pointer transition-all" type="submit" value={ paciente.id ? 'Editar Paciente' : 'Agregar Paciente'}/>
 
         </form>
     </div>
