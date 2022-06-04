@@ -40,8 +40,10 @@ function App() {
           setPaciente={setPaciente}
           eliminarPaciente={eliminarPaciente}
         />
-        <Footer />
       </div>
+        <div className="container mx-auto mt-20">
+          <Footer />
+        </div>
     </div>
   )
 }
