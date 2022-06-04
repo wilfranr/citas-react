@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Header from './components/Header'
 import Formulario from './components/Formulario'
 import ListadoPacientes from './components/ListadoPacientes'
+import Footer from './components/Footer'
 
 function App() {
 
@@ -39,6 +40,7 @@ function App() {
           setPaciente={setPaciente}
           eliminarPaciente={eliminarPaciente}
         />
+        <Footer />
       </div>
     </div>
   )
